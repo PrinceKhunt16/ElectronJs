@@ -9,7 +9,7 @@
   letter-spacing: 1px;
 }
 
-a {
+a, div {
   font-size: 24px;
   font-weight: 500;
 }

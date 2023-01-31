@@ -1,5 +1,7 @@
 const { app, BrowserWindow, globalShortcut, dialog, Tray, Menu, webContents } = require('electron')
+const electron = require('electron')
 const windowStateKeeper = require('electron-window-state')
+const ipc = electron.ipcMain
 
 let template = [
   {
@@ -81,7 +83,7 @@ function createWindow(){
   /* 
 
   globalShortcut.register('Shift + K', function(){
-    win.loadFile('./child.html')
+    win.loadFile('./popup.html')
     console.log('K Key Pressed')
   })
 
@@ -89,9 +91,9 @@ function createWindow(){
 
   /* 
 
-  const child = new BrowserWindow({ parent: win })
-  child.loadFile('child.html')
-  child.show()
+  const popup = new BrowserWindow({ parent: win })
+  popup.loadFile('popup.html')
+  popup.show()
 
   */
 
@@ -161,6 +163,19 @@ app.on('browser-window-blur', function(){
 */
 
 // app.whenReady().then(createWindow)
+
+ipc.on('open-error-dailog', function(e){
+  dialog.showErrorBox('Error Title', 'Error Description')
+  e.sender.send('opened-error-dailog', 'Main process opened the error dailog')
+})
+
+ipc.on('async-message', function(e){
+  e.sender.send('async-reply', 'Main process async replay')
+})
+
+ipc.on('sync-message', function(e){
+  e.returnValue = 'Sync reply'
+})
 
 app.on('ready', function(){
   createWindow()
