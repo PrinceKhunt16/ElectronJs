@@ -1,5 +1,24 @@
-const { app, BrowserWindow, globalShortcut, dialog, Tray, Menu } = require('electron')
+const { app, BrowserWindow, globalShortcut, dialog, Tray, Menu, webContents } = require('electron')
 const windowStateKeeper = require('electron-window-state')
+
+let template = [
+  {
+    label: 'Go to Defination'
+  },
+  {
+    label: 'Cut'
+  },
+  {
+    label: 'Copy'
+  },
+  {
+    label: 'Paste'
+  }
+]
+
+let menu = Menu.buildFromTemplate(template)
+
+/*
 
 let template = [
   {
@@ -34,6 +53,8 @@ let template = [
 let menu = Menu.buildFromTemplate(template)
 Menu.setApplicationMenu(menu)
 
+*/
+
 function createWindow(){
   let mainWindowState = windowStateKeeper({
     defaultHeight: 800,
@@ -49,7 +70,12 @@ function createWindow(){
     backgroundColor: '#f2f2f2',
     resizable: true,
     title: 'ElectronJs',
-    alwaysOnTop: false
+    alwaysOnTop: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+    }
   })
 
   /* 
@@ -70,6 +96,9 @@ function createWindow(){
   */
 
   win.loadFile('index.html')
+  win.webContents.on('context-menu', function(){
+    menu.popup()
+  })
   mainWindowState.manage(win)
 
   /*
@@ -135,4 +164,4 @@ app.on('browser-window-blur', function(){
 
 app.on('ready', function(){
   createWindow()
-})
+}) 
