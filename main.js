@@ -1,5 +1,38 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut, dialog, Tray, Menu } = require('electron')
 const windowStateKeeper = require('electron-window-state')
+
+let template = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Open',
+      },
+      {
+        label: 'Copy'
+      }
+    ]
+  },
+  {
+    label: 'Blog',
+    submenu: [
+      {
+        label: 'Website'
+      }
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Documentation'
+      }
+    ]
+  }
+]
+
+let menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
 
 function createWindow(){
   let mainWindowState = windowStateKeeper({
@@ -21,6 +54,15 @@ function createWindow(){
 
   /* 
 
+  globalShortcut.register('Shift + K', function(){
+    win.loadFile('./child.html')
+    console.log('K Key Pressed')
+  })
+
+  */
+
+  /* 
+
   const child = new BrowserWindow({ parent: win })
   child.loadFile('child.html')
   child.show()
@@ -29,6 +71,19 @@ function createWindow(){
 
   win.loadFile('index.html')
   mainWindowState.manage(win)
+
+  /*
+
+  win.webContents.on('did-finish-load', function(){
+    dialog.showOpenDialog({
+      defaultPath: app.getPath('downloads'),
+      buttonLabel: 'Select File'
+    })
+  })
+
+  */
+
+  /*
 
   const wc = win.webContents
 
@@ -43,6 +98,8 @@ function createWindow(){
   wc.on('before-input-event', function(){
     console.log('before-input-event')
   })
+
+  */
 }
 
 /*
